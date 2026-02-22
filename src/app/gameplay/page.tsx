@@ -32,21 +32,25 @@ function GamePlayContent() {
         const k = kaplay({
             width: 800,
             height: 600,
+            canvas: canvasRef.current as HTMLCanvasElement,
             background: [0, 0, 0], // Siyah arka plan
             letterbox: true,
         });
 
         k.loadSprite("bean", "/images/bean.png");
         k.loadSprite("grass", "/images/grass.png");
+        k.loadSprite("spike", "/images/spike.png");
 
         
 
         k.setGravity(2400);
 
-        const level = k.addLevel([
-            "@   =     == ",
+        const levelTiles = [
+            "@         == ",
             "============="
-        ], {
+        ];
+
+        const level = k.addLevel(levelTiles, {
             tileWidth: 64,
             tileHeight: 64,
             // Define what each symbol means (in components)
@@ -63,17 +67,21 @@ function GamePlayContent() {
                     k.sprite("grass"),
                     k.area(),
                     k.body({ isStatic: true }),
-                    k.anchor("bot"),
                 ],
+                ";": () => [
+                    k.sprite("spike"),
+                    k.area(),
+                    k.body({ isStatic: true }),
+                ]
             },
         });
-        //const size = 
+        const size = .5;//levelTiles[1].length;
 
-        k.setCamScale(.5, .5);
+        k.setCamScale(size,size);
 
         const player = level.get("player")[0];
-        player.add([k.text("Sen"), k.pos(0, -10)]);
-        const SPEED = 200;
+        //player.add([]);
+        const SPEED = 500;
 
        
 
@@ -84,11 +92,7 @@ function GamePlayContent() {
             
         });
 
-        // Belli bir periyotta oyuncu verilerini senkronize et (Saniyede 15 kere ~ Her 66ms'de bir)
-        k.loop(1 / 15, async () => {
-            const pX = Math.round(player.pos.x);
-            const pY = Math.round(player.pos.y);
-        });
+        
 
         // Movements
         k.onKeyPress("space", () => {
