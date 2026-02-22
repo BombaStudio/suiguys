@@ -1,0 +1,3 @@
+1. Ana sayfa
+2. Oyun Sayfası
+3. Profil
